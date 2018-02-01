@@ -4,7 +4,7 @@
 #
 Name     : memshrinker
 Version  : 3
-Release  : 11
+Release  : 12
 URL      : http://localhost/cgit/projects/memshrinker/snapshot/memshrinker-3.tar.gz
 Source0  : http://localhost/cgit/projects/memshrinker/snapshot/memshrinker-3.tar.gz
 Summary  : No detailed summary available
@@ -13,6 +13,7 @@ License  : GPL-3.0
 Requires: memshrinker-bin
 Requires: memshrinker-config
 Requires: memshrinker-autostart
+Requires: memshrinker-data
 BuildRequires : pkgconfig(check)
 BuildRequires : pkgconfig(libsystemd)
 BuildRequires : valgrind
@@ -31,6 +32,7 @@ autostart components for the memshrinker package.
 %package bin
 Summary: bin components for the memshrinker package.
 Group: Binaries
+Requires: memshrinker-data
 Requires: memshrinker-config
 
 %description bin
@@ -45,6 +47,14 @@ Group: Default
 config components for the memshrinker package.
 
 
+%package data
+Summary: data components for the memshrinker package.
+Group: Data
+
+%description data
+data components for the memshrinker package.
+
+
 %prep
 %setup -q -n memshrinker-3
 
@@ -53,18 +63,22 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1510693377
+export SOURCE_DATE_EPOCH=1517512514
 export CFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
 export FCFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
 export FFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
 export CXXFLAGS="$CXXFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
 %autogen --disable-static
-make V=1  %{?_smp_mflags}
+make  %{?_smp_mflags}
 
 %install
-export SOURCE_DATE_EPOCH=1510693377
+export SOURCE_DATE_EPOCH=1517512514
 rm -rf %{buildroot}
 %make_install
+## make_install_append content
+mkdir -p %{buildroot}/usr/share/clr-service-restart
+ln -sf /usr/lib/systemd/system/memshrinker.service %{buildroot}/usr/share/clr-service-restart/memshrinker.service
+## make_install_append end
 
 %files
 %defattr(-,root,root,-)
@@ -81,3 +95,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %exclude /usr/lib/systemd/system/multi-user.target.wants/memshrinker.service
 /usr/lib/systemd/system/memshrinker.service
+
+%files data
+%defattr(-,root,root,-)
+/usr/share/clr-service-restart/memshrinker.service
