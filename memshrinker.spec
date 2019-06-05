@@ -4,7 +4,7 @@
 #
 Name     : memshrinker
 Version  : 3
-Release  : 14
+Release  : 15
 URL      : http://localhost/cgit/projects/memshrinker/snapshot/memshrinker-3.tar.gz
 Source0  : http://localhost/cgit/projects/memshrinker/snapshot/memshrinker-3.tar.gz
 Summary  : No detailed summary available
